@@ -27,9 +27,17 @@ copy .env.example .env
 # 2. Build the index
 python app.py ingest
 
-# 3. Ask questions
+# 3a. Ask questions from the terminal
 python app.py ask
+
+# 3b. ...or launch the web interface instead
+python web.py
+# then open http://127.0.0.1:5000
 ```
+
+`qa.py` holds the shared retrieval + answer logic that both `app.py` and
+`web.py` call into - the only difference between the two is how the question
+comes in and the answer gets displayed.
 
 ## Notes
 
