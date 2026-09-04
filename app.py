@@ -19,6 +19,14 @@ DOCS_DIR = BASE_DIR / "docs"
 INDEX_PATH = BASE_DIR / "index.pkl"
 MODEL = "claude-opus-5"
 
+SYSTEM_PROMPT = (
+    "You answer questions using ONLY the provided document excerpts. "
+    "If the excerpts don't contain the answer, say so plainly instead of guessing. "
+    "Cite which source file each part of your answer comes from. "
+    "Earlier turns in this conversation may reference documents too - use that "
+    "history to understand follow-up questions (e.g. 'what about X instead')."
+)
+
 
 def cmd_ingest(_args):
     if not any(DOCS_DIR.iterdir()):
@@ -40,33 +48,20 @@ def cmd_ingest(_args):
     print(f"Saved to {INDEX_PATH}")
 
 
-def answer_question(question: str, records: list[dict], embeddings, client) -> str:
-    """Retrieve the most relevant chunks, then ask Claude to answer using only those."""
+def build_user_turn(question: str, records: list[dict], embeddings, k: int = 4) -> str:
+    """Retrieve the chunks most relevant to this question and format them as a turn.
+
+    Retrieval runs fresh on every question (using just that question's text) -
+    conversation memory comes from resending prior turns below, not from this step.
+    """
     query_embedding = embed([question])[0]
-    indices = top_k(query_embedding, embeddings, k=4)
+    indices = top_k(query_embedding, embeddings, k=k)
     context_chunks = [records[i] for i in indices]
 
     context_text = "\n\n---\n\n".join(
         f"[Source: {c['source']}]\n{c['text']}" for c in context_chunks
     )
-
-    system_prompt = (
-        "You answer questions using ONLY the provided document excerpts. "
-        "If the excerpts don't contain the answer, say so plainly instead of guessing. "
-        "Cite which source file each part of your answer comes from."
-    )
-
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=1024,
-        system=system_prompt,
-        messages=[{
-            "role": "user",
-            "content": f"Document excerpts:\n\n{context_text}\n\nQuestion: {question}",
-        }],
-    )
-
-    return next((block.text for block in response.content if block.type == "text"), "")
+    return f"Document excerpts:\n\n{context_text}\n\nQuestion: {question}"
 
 
 def cmd_ask(_args):
@@ -77,6 +72,10 @@ def cmd_ask(_args):
     records, embeddings = load_index(INDEX_PATH)
     client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from env / .env
 
+    # The API is stateless - conversation memory means resending this full
+    # history on every request, so Claude can see prior questions/answers.
+    messages: list[dict] = []
+
     print(f"Loaded index: {len(records)} chunks. Ask a question (or 'quit' to exit).\n")
     while True:
         question = input("> ").strip()
@@ -84,14 +83,26 @@ def cmd_ask(_args):
             break
         if not question:
             continue
+
+        messages.append({"role": "user", "content": build_user_turn(question, records, embeddings)})
+
         try:
-            answer = answer_question(question, records, embeddings, client)
+            response = client.messages.create(
+                model=MODEL,
+                max_tokens=1024,
+                system=SYSTEM_PROMPT,
+                messages=messages,
+            )
+            answer = next((b.text for b in response.content if b.type == "text"), "")
             print(f"\n{answer}\n")
+            messages.append({"role": "assistant", "content": answer})
         except anthropic.AuthenticationError:
             print("Invalid or missing API key. Set ANTHROPIC_API_KEY in your .env file.")
+            messages.pop()  # don't leave a dangling unanswered turn in history
             break
         except anthropic.APIStatusError as e:
             print(f"API error: {e.message}")
+            messages.pop()
 
 
 def main():
