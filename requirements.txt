@@ -1,8 +1,14 @@
+# Base dependencies - what the deployed server (web.py on Render) needs.
+# Deliberately does NOT include sentence-transformers/torch: the public
+# deployment uses the hosted Voyage AI embeddings API instead (see
+# embed_store.py) to avoid PyTorch's memory footprint on a small server.
+# For local development, install requirements-local.txt instead (it pulls
+# this file in too, plus the local embedding model).
 anthropic>=0.40.0
-sentence-transformers>=3.0.0
 numpy>=1.26.0
 pypdf>=4.0.0
 python-dotenv>=1.0.0
 flask>=3.0.0
 flask-limiter>=3.5.0
 gunicorn>=22.0.0
+voyageai>=0.3.0

@@ -29,8 +29,7 @@ from flask import Flask, jsonify, request, send_from_directory
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-from embed_store import load_index
-from indexer import build_index
+from indexer import load_or_build_index
 from qa import ask
 
 BASE_DIR = Path(__file__).parent
@@ -60,14 +59,12 @@ _embeddings = None
 def get_index():
     global _records, _embeddings
     if _records is None:
-        if not INDEX_PATH.exists():
-            # First boot on a fresh deploy - build it from whatever's in docs/
-            # (only files committed to the repo; see docs/README notes on
-            # keeping real/sensitive documents out of a public deployment).
-            build_index(DOCS_DIR, INDEX_PATH)
-        if not INDEX_PATH.exists():
+        if not any(DOCS_DIR.iterdir()):
             raise FileNotFoundError("No documents found to index - add files to docs/.")
-        _records, _embeddings = load_index(INDEX_PATH)
+        # Builds automatically if missing, or if it was built by a different
+        # embedding backend (vectors aren't compatible across backends) - see
+        # the README on keeping real/sensitive documents out of a public deployment.
+        _records, _embeddings = load_or_build_index(DOCS_DIR, INDEX_PATH)
     return _records, _embeddings
 
 

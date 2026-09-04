@@ -1,0 +1,5 @@
+# Local development on top of requirements.txt: adds the local embedding
+# model (sentence-transformers/torch) so you don't need a Voyage AI key just
+# to run this on your own machine.
+-r requirements.txt
+sentence-transformers>=3.0.0

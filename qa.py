@@ -15,7 +15,7 @@ SYSTEM_PROMPT = (
 
 def retrieve_context(question: str, records: list[dict], embeddings, k: int = 4) -> str:
     """Find the k most relevant chunks for a question and format them as context text."""
-    query_embedding = embed([question])[0]
+    query_embedding = embed([question], input_type="query")[0]
     indices = top_k(query_embedding, embeddings, k=k)
     context_chunks = [records[i] for i in indices]
     return "\n\n---\n\n".join(

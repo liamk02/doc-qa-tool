@@ -11,8 +11,7 @@ from pathlib import Path
 import anthropic
 from dotenv import load_dotenv
 
-from embed_store import load_index
-from indexer import build_index
+from indexer import build_index, load_or_build_index
 from qa import ask
 
 BASE_DIR = Path(__file__).parent
@@ -37,11 +36,13 @@ def cmd_ingest(_args):
 
 
 def cmd_ask(_args):
-    if not INDEX_PATH.exists():
-        print("No index found. Run `python app.py ingest` first.")
+    if not any(DOCS_DIR.iterdir()) and not INDEX_PATH.exists():
+        print("No index found and no files in docs/. Run `python app.py ingest` first.")
         return
 
-    records, embeddings = load_index(INDEX_PATH)
+    # Rebuilds automatically if missing or built by a different embedding
+    # backend (e.g. you just added VOYAGE_API_KEY to .env).
+    records, embeddings = load_or_build_index(DOCS_DIR, INDEX_PATH)
     client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from env / .env
 
     # Plain-text history: {"role": ..., "content": <plain text, no document context>}.
