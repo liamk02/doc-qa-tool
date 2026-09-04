@@ -1,10 +1,18 @@
 """Turn raw documents into overlapping text chunks ready for embedding."""
 
+import re
 from pathlib import Path
 
 from pypdf import PdfReader
 
 SUPPORTED_EXTENSIONS = {".txt", ".md", ".pdf"}
+
+# Splits after sentence-ending punctuation, only when followed by whitespace
+# and then a capital letter/digit/quote - a reasonable heuristic without
+# pulling in a full NLP library. It will occasionally over-split on
+# abbreviations (e.g. "Dr. Smith") - acceptable for this project; a proper
+# sentence tokenizer (e.g. nltk/spacy) would be the fix if that matters later.
+_SENTENCE_SPLIT_RE = re.compile(r'(?<=[.!?])\s+(?=[A-Z0-9"\'(])')
 
 
 def extract_text(path: Path) -> str:
@@ -15,25 +23,49 @@ def extract_text(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="ignore")
 
 
-def chunk_text(text: str, chunk_size: int = 300, overlap: int = 50) -> list[str]:
-    """Split text into overlapping word-based chunks.
+def split_sentences(text: str) -> list[str]:
+    """Break text into sentences, collapsing whitespace/line breaks first.
 
-    Word-based (not token-based) chunking keeps this dependency-free and easy
-    to read. The overlap means neighboring chunks share some words, so an
-    answer that straddles a chunk boundary doesn't get cut in half.
+    Collapsing whitespace matters most for PDFs, whose extracted text often
+    has stray line breaks in the middle of sentences.
     """
-    words = text.split()
-    if not words:
+    text = re.sub(r"\s+", " ", text).strip()
+    if not text:
+        return []
+    return _SENTENCE_SPLIT_RE.split(text)
+
+
+def chunk_text(text: str, max_words: int = 300, overlap_sentences: int = 2) -> list[str]:
+    """Group sentences into chunks, never cutting a sentence in half.
+
+    Sentences are packed in order until adding the next one would exceed
+    max_words, then a new chunk starts. The last `overlap_sentences` of the
+    closing chunk are carried into the next one, so a question whose answer
+    straddles a chunk boundary still has enough surrounding context.
+    """
+    sentences = split_sentences(text)
+    if not sentences:
         return []
 
-    chunks = []
-    start = 0
-    while start < len(words):
-        end = start + chunk_size
-        chunk = " ".join(words[start:end])
-        if chunk.strip():
-            chunks.append(chunk)
-        start += chunk_size - overlap
+    chunks: list[str] = []
+    current: list[str] = []
+    current_words = 0
+
+    def flush():
+        if current:
+            chunks.append(" ".join(current))
+
+    for sentence in sentences:
+        sentence_words = len(sentence.split())
+        if current and current_words + sentence_words > max_words:
+            flush()
+            # Carry the tail of the closing chunk forward for continuity.
+            current = current[-overlap_sentences:] if overlap_sentences else []
+            current_words = sum(len(s.split()) for s in current)
+        current.append(sentence)
+        current_words += sentence_words
+
+    flush()
     return chunks
 
 
