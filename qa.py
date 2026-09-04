@@ -23,7 +23,14 @@ def retrieve_context(question: str, records: list[dict], embeddings, k: int = 4)
     )
 
 
-def ask(question: str, history: list[dict], records: list[dict], embeddings, client) -> str:
+def ask(
+    question: str,
+    history: list[dict],
+    records: list[dict],
+    embeddings,
+    client,
+    model: str = MODEL,
+) -> str:
     """Answer a question and return just the answer text.
 
     `history` is a list of {"role": "user"|"assistant", "content": <plain text>}.
@@ -39,7 +46,7 @@ def ask(question: str, history: list[dict], records: list[dict], embeddings, cli
     }
 
     response = client.messages.create(
-        model=MODEL,
+        model=model,
         max_tokens=1024,
         system=SYSTEM_PROMPT,
         messages=history + [current_turn],

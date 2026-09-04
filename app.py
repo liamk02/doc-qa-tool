@@ -11,8 +11,8 @@ from pathlib import Path
 import anthropic
 from dotenv import load_dotenv
 
-from chunking import load_documents
-from embed_store import embed, load_index, save_index
+from embed_store import load_index
+from indexer import build_index
 from qa import ask
 
 BASE_DIR = Path(__file__).parent
@@ -25,18 +25,14 @@ def cmd_ingest(_args):
         print(f"No files found in {DOCS_DIR}. Drop some .txt/.md/.pdf files in there first.")
         return
 
-    print(f"Reading and chunking documents from {DOCS_DIR}...")
-    records = load_documents(DOCS_DIR)
-    if not records:
+    print(f"Reading, chunking, and embedding documents from {DOCS_DIR}...")
+    print("(first run downloads a small model, be patient)")
+    count = build_index(DOCS_DIR, INDEX_PATH)
+    if count == 0:
         print("No supported files found (.txt, .md, .pdf).")
         return
 
-    print(f"Embedding {len(records)} chunks (first run downloads a small model, be patient)...")
-    embeddings = embed([r["text"] for r in records])
-
-    save_index(records, embeddings, INDEX_PATH)
-    sources = {r["source"] for r in records}
-    print(f"Index built: {len(records)} chunks from {len(sources)} file(s).")
+    print(f"Index built: {count} chunks.")
     print(f"Saved to {INDEX_PATH}")
 
 

@@ -1,27 +1,56 @@
-"""Minimal web interface for the document Q&A tool.
+"""Web interface for the document Q&A tool - safe to deploy publicly.
 
-Usage:
+Local usage:
+    python app.py ingest   # optional - web.py builds the index itself if missing
     python web.py
-    (then open http://127.0.0.1:5000 in a browser)
+    (then open http://127.0.0.1:5000)
 
-Requires an index built first: python app.py ingest
+Public deployment (e.g. Render): set ANTHROPIC_API_KEY as a server-side
+environment variable (never exposed to the browser) and run with a real WSGI
+server, e.g.:
+    gunicorn web:app
+
+Because this endpoint can be hit by anyone on the internet once deployed, it
+has three layers of cost protection on top of what app.py needs locally:
+1. Rate limiting (flask-limiter) - caps requests per visitor.
+2. Input validation - rejects oversized questions/history before they reach
+   the API, so a crafted request can't inflate token usage.
+3. A cheaper default model (PUBLIC_MODEL) than the local CLI uses.
+You should ALSO set a monthly spend cap in the Anthropic Console - none of
+the above replaces that; they just keep normal/abusive traffic cheap.
 """
 
+import os
 from pathlib import Path
 
 import anthropic
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 from embed_store import load_index
+from indexer import build_index
 from qa import ask
 
 BASE_DIR = Path(__file__).parent
+DOCS_DIR = BASE_DIR / "docs"
 INDEX_PATH = BASE_DIR / "index.pkl"
+
+# Cheaper than the CLI's default model - this endpoint can be hit by anyone,
+# so the public-facing cost profile per question should stay low. Override
+# with the PUBLIC_MODEL env var if you want a different tradeoff.
+PUBLIC_MODEL = os.environ.get("PUBLIC_MODEL", "claude-sonnet-5")
+
+MAX_QUESTION_CHARS = 500
+MAX_HISTORY_ENTRIES = 12       # 6 question/answer pairs
+MAX_HISTORY_ENTRY_CHARS = 2000
 
 load_dotenv()
 app = Flask(__name__, static_folder="static", static_url_path="")
 client = anthropic.Anthropic()
+
+limiter = Limiter(get_remote_address, app=app, default_limits=[])
 
 # Loaded lazily on first request, then cached in memory for the life of the process.
 _records = None
@@ -32,9 +61,42 @@ def get_index():
     global _records, _embeddings
     if _records is None:
         if not INDEX_PATH.exists():
-            raise FileNotFoundError("No index found. Run `python app.py ingest` first.")
+            # First boot on a fresh deploy - build it from whatever's in docs/
+            # (only files committed to the repo; see docs/README notes on
+            # keeping real/sensitive documents out of a public deployment).
+            build_index(DOCS_DIR, INDEX_PATH)
+        if not INDEX_PATH.exists():
+            raise FileNotFoundError("No documents found to index - add files to docs/.")
         _records, _embeddings = load_index(INDEX_PATH)
     return _records, _embeddings
+
+
+def validate_ask_request(data: dict) -> str | None:
+    """Return an error message if the request is invalid, else None.
+
+    Runs BEFORE anything reaches Claude - this is what stops a crafted
+    request from inflating token usage on a public endpoint.
+    """
+    question = (data.get("question") or "").strip()
+    if not question:
+        return "Question is empty."
+    if len(question) > MAX_QUESTION_CHARS:
+        return f"Question is too long (max {MAX_QUESTION_CHARS} characters)."
+
+    history = data.get("history")
+    if history is None:
+        history = []
+    if not isinstance(history, list) or len(history) > MAX_HISTORY_ENTRIES:
+        return "Conversation history is invalid or too long."
+    for turn in history:
+        if (
+            not isinstance(turn, dict)
+            or turn.get("role") not in ("user", "assistant")
+            or not isinstance(turn.get("content"), str)
+            or len(turn["content"]) > MAX_HISTORY_ENTRY_CHARS
+        ):
+            return "Conversation history is invalid or too long."
+    return None
 
 
 @app.route("/")
@@ -43,13 +105,16 @@ def index():
 
 
 @app.route("/api/ask", methods=["POST"])
+@limiter.limit("8 per hour")
 def api_ask():
     data = request.get_json(force=True, silent=True) or {}
-    question = (data.get("question") or "").strip()
-    history = data.get("history") or []
 
-    if not question:
-        return jsonify({"error": "Question is empty."}), 400
+    error = validate_ask_request(data)
+    if error:
+        return jsonify({"error": error}), 400
+
+    question = data["question"].strip()
+    history = data.get("history") or []
 
     try:
         records, embeddings = get_index()
@@ -57,14 +122,22 @@ def api_ask():
         return jsonify({"error": str(e)}), 400
 
     try:
-        answer = ask(question, history, records, embeddings, client)
+        answer = ask(question, history, records, embeddings, client, model=PUBLIC_MODEL)
     except anthropic.AuthenticationError:
-        return jsonify({"error": "Invalid or missing API key. Check your .env file."}), 500
+        return jsonify({"error": "Server is misconfigured (invalid API key)."}), 500
+    except anthropic.RateLimitError:
+        return jsonify({"error": "This demo is getting a lot of traffic right now - try again shortly."}), 429
     except anthropic.APIStatusError as e:
         return jsonify({"error": f"API error: {e.message}"}), 502
 
     return jsonify({"answer": answer})
 
 
+@app.errorhandler(429)
+def rate_limited(_e):
+    return jsonify({"error": "You've hit the question limit for this demo - try again in a bit."}), 429
+
+
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    debug = os.environ.get("FLASK_DEBUG", "1") == "1"
+    app.run(debug=debug, port=int(os.environ.get("PORT", 5000)))
