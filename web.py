@@ -101,6 +101,15 @@ def index():
     return send_from_directory(app.static_folder, "index.html")
 
 
+@app.route("/api/health")
+def health():
+    # Deliberately makes no Claude API call - a liveness check should never
+    # cost money, however often (or however many visitors' browsers) it runs.
+    response = jsonify({"status": "ok", "service": "doc-qa-tool"})
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    return response
+
+
 @app.route("/api/ask", methods=["POST"])
 @limiter.limit("8 per hour")
 def api_ask():
