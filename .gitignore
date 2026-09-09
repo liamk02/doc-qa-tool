@@ -9,4 +9,8 @@ Thumbs.db
 # Real personal/business documents stay local - never pushed to GitHub.
 # Add specific demo files back with "!filename" if you want them public.
 docs/*
-!docs/sample-company-policy.txt
+!docs/employee-handbook.md
+!docs/client-service-agreement.md
+!docs/warehouse-operations.md
+!docs/it-security-policy.md
+!docs/supplier-onboarding.md

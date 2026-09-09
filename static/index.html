@@ -83,9 +83,27 @@
   input::placeholder { color: var(--muted); }
   input:focus { border-bottom-color: var(--accent); }
   input:disabled { opacity: 0.5; }
+  /* Corpus panel: tells the visitor what this demo actually knows. Without
+     it the page is a text box with no clue what to type. */
+  .corpus { margin-top: 34px; padding-top: 22px; border-top: 1px solid var(--line); }
+  .corpus .label { display: block; margin-bottom: 12px; }
+  .doc-list { list-style: none; margin-bottom: 26px; }
+  .doc-list li { display: grid; grid-template-columns: 210px 1fr; gap: 18px; padding: 11px 0; border-top: 1px solid var(--line); align-items: baseline; }
+  .doc-list li:last-child { border-bottom: 1px solid var(--line); }
+  .doc-name { font-family: var(--serif); font-size: 1.08rem; color: var(--ink); }
+  .doc-desc { color: var(--muted); font-size: 0.87rem; line-height: 1.5; }
+  .suggestions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    border: 1px solid var(--line-strong); background: transparent; color: var(--ink-soft);
+    font-family: var(--sans); font-size: 0.87rem; line-height: 1.45; text-align: left;
+    padding: 10px 14px; cursor: pointer; max-width: 100%;
+    transition: border-color 160ms cubic-bezier(0,0,0.2,1), color 160ms cubic-bezier(0,0,0.2,1);
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
   footer { padding: 32px 24px; text-align: center; }
   @media (max-width: 600px) {
     h1 { font-size: 2.1rem; }
+    .doc-list li { grid-template-columns: 1fr; gap: 4px; }
     form { flex-direction: column; align-items: stretch; }
   }
 </style>
@@ -104,7 +122,26 @@
   <main>
     <p class="label">System &middot; Document Q&amp;A</p>
     <h1>Ask the documents.</h1>
-    <p class="lede">Questions are answered from the files in this demo folder, with the source passage behind each answer. Not a search box: a sourced answer.</p>
+    <p class="lede">This demo is loaded with the internal paperwork of a fictional Stockholm wholesaler, Nordvik Trading AB. Ask it anything the documents cover and it answers from the text, citing the file it came from. Not a search box: a sourced answer.</p>
+
+    <section class="corpus" id="corpus">
+      <p class="label">Loaded documents</p>
+      <ul class="doc-list">
+        <li><span class="doc-name">Employee handbook</span><span class="doc-desc">Working hours and remote work, expenses, annual leave, sick pay, company equipment, notice periods</span></li>
+        <li><span class="doc-name">Client agreement</span><span class="doc-desc">Payment terms, order cutoffs, damaged goods and returns, service levels, liability, termination</span></li>
+        <li><span class="doc-name">Warehouse manual</span><span class="doc-desc">Goods receiving, put-away, picking and dispatch, damage handling, returns processing, stock counts</span></li>
+        <li><span class="doc-name">IT security policy</span><span class="doc-desc">Accounts and MFA, devices, data retention under GDPR, invoice fraud, vendor access, incident response</span></li>
+        <li><span class="doc-name">Supplier procedure</span><span class="doc-desc">Qualification, the 90-day trial, payment terms, labelling, shelf life on arrival, delisting</span></li>
+      </ul>
+
+      <p class="label">Try asking</p>
+      <div class="suggestions" id="suggestions">
+        <button type="button" class="chip">A customer says goods arrived damaged. They told us 10 days later. What are they entitled to?</button>
+        <button type="button" class="chip">My work laptop was stolen over the weekend. What am I supposed to do?</button>
+        <button type="button" class="chip">A supplier wants to change their packaging. What do we need from them, and when?</button>
+        <button type="button" class="chip">I want to book three weeks off in July. When do I need to ask by?</button>
+      </div>
+    </section>
 
     <div id="log" aria-live="polite"></div>
 
@@ -123,6 +160,7 @@
   const form = document.getElementById("form");
   const input = document.getElementById("question");
   const submitBtn = document.getElementById("submit");
+  const suggestions = document.getElementById("suggestions");
 
   // Plain-text history sent back to the server each turn: [{role, content}, ...]
   let history = [];
@@ -145,6 +183,13 @@
     return div;
   }
 
+  suggestions.addEventListener("click", (e) => {
+    const chip = e.target.closest(".chip");
+    if (!chip) return;
+    input.value = chip.textContent.trim();
+    form.requestSubmit();
+  });
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const question = input.value.trim();
@@ -152,6 +197,7 @@
 
     addMessage("user", question);
     input.value = "";
+    suggestions.hidden = true;
     input.disabled = true;
     submitBtn.disabled = true;
     const pending = addMessage("pending", "Reading the documents…");
