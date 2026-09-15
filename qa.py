@@ -9,7 +9,9 @@ SYSTEM_PROMPT = (
     "If the excerpts don't contain the answer, say so plainly instead of guessing. "
     "Cite which source file each part of your answer comes from. "
     "Earlier turns in this conversation may reference documents too - use that "
-    "history to understand follow-up questions (e.g. 'what about X instead')."
+    "history to understand follow-up questions (e.g. 'what about X instead'). "
+    "ALWAYS answer in Swedish, whatever language the question is asked in. "
+    "The documents are Swedish: quote their wording rather than translating it."
 )
 
 

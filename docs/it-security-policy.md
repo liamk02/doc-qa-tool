@@ -1,38 +1,38 @@
-# Nordvik Trading AB - IT and Information Security Policy
-Approved by the board, March 2026. Applies to all staff, contractors and temporary workers.
+# Nordvik Trading AB - IT- och informationssäkerhetspolicy
+Fastställd av styrelsen i mars 2026. Gäller alla anställda, konsulter och inhyrd personal.
 
-## 1. Accounts and Authentication
-Every user has a named account. Shared logins are prohibited without exception, including in the warehouse, where handheld terminals use individual PINs tied to named users.
+## 1. Konton och inloggning
+Varje användare har ett personligt konto. Delade inloggningar är förbjudna utan undantag, även på lagret, där handdatorer använder personliga koder kopplade till namngivna användare.
 
-Multi-factor authentication is mandatory on email, the ERP system, and the expense portal. Where a hardware token is issued, it must not be left attached to the laptop it protects.
+Tvåfaktorsinloggning är obligatorisk på mejl, affärssystemet och utläggsportalen. Där en fysisk säkerhetsnyckel delats ut får den inte sitta kvar i datorn den skyddar.
 
-Passwords must be at least 14 characters. The company does not enforce routine password rotation, in line with current guidance, but a password is reset immediately on any suspicion of compromise.
+Lösenord ska vara minst 14 tecken. Företaget tvingar inte fram regelbundna lösenordsbyten, i linje med aktuella rekommendationer, men ett lösenord byts omedelbart vid minsta misstanke om att det läckt.
 
-## 2. Devices
-Company laptops are encrypted at rest and must not be shared with family members. Screens lock automatically after five minutes.
+## 2. Utrustning
+Företagets datorer är krypterade och får inte delas med familjemedlemmar. Skärmen låses automatiskt efter fem minuter.
 
-Personal devices may access company email through the managed app only. Storing company data in personal cloud accounts, including private Google Drive or Dropbox, is a disciplinary matter.
+Privata enheter får komma åt företagets mejl endast via den hanterade appen. Att lagra företagets information på privata molntjänster, inklusive privat Google Drive eller Dropbox, är en disciplinär fråga.
 
-Lost or stolen devices must be reported to IT within 24 hours so the device can be wiped remotely. Reporting late is treated more seriously than losing the device.
+Borttappad eller stulen utrustning ska anmälas till IT inom 24 timmar så att enheten kan raderas på distans. Att anmäla för sent ses som allvarligare än att tappa bort enheten.
 
-## 3. Data Handling and Retention
-Client commercial terms, pricing and volumes are confidential and are shared outside the company only under a signed NDA.
+## 3. Information och gallring
+Kunders villkor, priser och volymer är konfidentiella och delas utanför företaget endast under sekretessavtal.
 
-Personal data is processed under GDPR. Employee records are retained for the duration of employment plus two years. Client transaction records are retained for seven years to meet Swedish bookkeeping requirements. Warehouse dispatch photographs are retained for 90 days and then deleted automatically.
+Personuppgifter behandlas enligt GDPR. Personalakter sparas under anställningen plus två år. Kundtransaktioner sparas i sju år enligt bokföringslagen. Fotografier från utlastningen sparas i 90 dagar och raderas sedan automatiskt.
 
-Subject access requests are forwarded to the finance director, who acts as data protection contact, and must be answered within one month.
+Begäran om registerutdrag skickas vidare till ekonomichefen, som är dataskyddskontakt, och ska besvaras inom en månad.
 
-## 4. Email and Phishing
-Invoice fraud is the most common attack against this company. Any request to change a supplier's bank details is verified by telephone to a number already held on file, never to a number contained in the request itself. This applies even where the request appears to come from a director.
+## 4. Mejl och nätfiske
+Fakturabedrägeri är den vanligaste attacken mot det här företaget. Varje begäran om att ändra en leverantörs bankuppgifter verifieras per telefon mot ett nummer som redan finns registrerat, aldrig mot ett nummer som står i själva begäran. Detta gäller även när begäran ser ut att komma från en chef.
 
-Suspected phishing is forwarded to security@nordvik.example and then deleted. Staff who report a click promptly are never disciplined for it.
+Misstänkt nätfiske vidarebefordras till security@nordvik.example och raderas sedan. Den som snabbt anmäler att hen klickat får aldrig en tillsägelse för det.
 
-## 5. Third Party and Vendor Access
-External vendors are granted time-limited access only, scoped to the systems they need, and access is revoked on the closing date recorded in the ticket. Standing vendor accounts are reviewed quarterly and removed where no activity is recorded for 90 days.
+## 5. Leverantörer och extern åtkomst
+Externa leverantörer får tidsbegränsad åtkomst, avgränsad till de system de behöver, och åtkomsten stängs på det slutdatum som står i ärendet. Stående leverantörskonton gås igenom varje kvartal och tas bort om ingen aktivitet registrerats på 90 dagar.
 
-## 6. Incident Response
-Any suspected incident is reported to IT immediately, without waiting for confirmation. The duty responder classifies severity within one hour.
+## 6. Incidenthantering
+Varje misstänkt incident anmäls till IT omedelbart, utan att invänta bekräftelse. Ansvarig klassar allvarlighetsgrad inom en timme.
 
-For incidents involving personal data, the finance director assesses whether the breach is reportable to Integritetsskyddsmyndigheten. Where it is reportable, notification must be made within 72 hours of becoming aware, so internal escalation cannot wait for a full investigation to conclude.
+Vid incidenter som rör personuppgifter bedömer ekonomichefen om händelsen ska anmälas till Integritetsskyddsmyndigheten. Om den ska anmälas måste det ske inom 72 timmar från upptäckt, vilket innebär att den interna eskaleringen inte kan vänta på att utredningen blir klar.
 
-Staff must not attempt to investigate a suspected compromise themselves, including logging into the affected account to look around, because this destroys evidence and can extend the attacker's access.
+Anställda ska inte själva försöka utreda en misstänkt intrångshändelse, inklusive att logga in på det drabbade kontot för att titta runt, eftersom det förstör bevis och kan förlänga angriparens åtkomst.

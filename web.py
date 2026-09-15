@@ -76,15 +76,15 @@ def validate_ask_request(data: dict) -> str | None:
     """
     question = (data.get("question") or "").strip()
     if not question:
-        return "Question is empty."
+        return "Frågan är tom."
     if len(question) > MAX_QUESTION_CHARS:
-        return f"Question is too long (max {MAX_QUESTION_CHARS} characters)."
+        return f"Frågan är för lång (max {MAX_QUESTION_CHARS} tecken)."
 
     history = data.get("history")
     if history is None:
         history = []
     if not isinstance(history, list) or len(history) > MAX_HISTORY_ENTRIES:
-        return "Conversation history is invalid or too long."
+        return "Konversationshistoriken är ogiltig eller för lång."
     for turn in history:
         if (
             not isinstance(turn, dict)
@@ -92,7 +92,7 @@ def validate_ask_request(data: dict) -> str | None:
             or not isinstance(turn.get("content"), str)
             or len(turn["content"]) > MAX_HISTORY_ENTRY_CHARS
         ):
-            return "Conversation history is invalid or too long."
+            return "Konversationshistoriken är ogiltig eller för lång."
     return None
 
 
@@ -130,18 +130,18 @@ def api_ask():
     try:
         answer = ask(question, history, records, embeddings, client, model=PUBLIC_MODEL)
     except anthropic.AuthenticationError:
-        return jsonify({"error": "Server is misconfigured (invalid API key)."}), 500
+        return jsonify({"error": "Servern är felkonfigurerad (ogiltig API-nyckel)."}), 500
     except anthropic.RateLimitError:
-        return jsonify({"error": "This demo is getting a lot of traffic right now - try again shortly."}), 429
+        return jsonify({"error": "Demon har mycket trafik just nu - försök igen om en stund."}), 429
     except anthropic.APIStatusError as e:
-        return jsonify({"error": f"API error: {e.message}"}), 502
+        return jsonify({"error": f"API-fel: {e.message}"}), 502
 
     return jsonify({"answer": answer})
 
 
 @app.errorhandler(429)
 def rate_limited(_e):
-    return jsonify({"error": "You've hit the question limit for this demo - try again in a bit."}), 429
+    return jsonify({"error": "Du har nått frågegränsen för den här demon - försök igen om en stund."}), 429
 
 
 if __name__ == "__main__":

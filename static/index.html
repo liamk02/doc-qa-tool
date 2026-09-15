@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Document Q&amp;A · Kvarzell Consulting</title>
+<title>Fråga dokumenten · Kvarzell Consulting</title>
 <link rel="icon" href="mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
@@ -56,9 +56,7 @@
     display: flex; align-items: center; justify-content: space-between; gap: 16px;
   }
   .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-  .brand img { width: 24px; height: 24px; }
   .brand .label { color: var(--ink); }
-  .brand .label span { color: var(--muted); }
 
   main { flex: 1; width: 100%; max-width: 720px; margin: 0 auto; padding: 128px 24px 40px; display: flex; flex-direction: column; }
   h1 { font-family: var(--serif); font-weight: 300; font-size: 2.6rem; line-height: 1.08; letter-spacing: -0.01em; margin-top: 16px; }
@@ -113,33 +111,32 @@
 
   <header>
     <a class="brand" href="https://kvarzellconsulting.com">
-      <img src="mark.png" alt="">
-      <span class="label">Kvarzell <span>Consulting</span></span>
+      <span class="label">Kvarzell Consulting</span>
     </a>
-    <a class="btn" href="https://kvarzellconsulting.com">&larr; Back to site</a>
+    <a class="btn" href="https://kvarzellconsulting.com">&larr; Tillbaka till sidan</a>
   </header>
 
   <main>
-    <p class="label">System &middot; Document Q&amp;A</p>
-    <h1>Ask the documents.</h1>
-    <p class="lede">This demo is loaded with the internal paperwork of a fictional Stockholm wholesaler, Nordvik Trading AB. Ask it anything the documents cover and it answers from the text, citing the file it came from. Not a search box: a sourced answer.</p>
+    <p class="label">System &middot; Fråga dokumenten</p>
+    <h1>Fråga dokumenten.</h1>
+    <p class="lede">Den här demon är laddad med den interna dokumentationen hos en påhittad Stockholmsgrossist, Nordvik Trading AB. Fråga vad som helst som dokumenten täcker så svarar den utifrån texten och hänvisar till vilken fil svaret kommer från. Inte en sökruta. Ett svar du kan kontrollera.</p>
 
     <section class="corpus" id="corpus">
-      <p class="label">Loaded documents</p>
+      <p class="label">Inlästa dokument</p>
       <ul class="doc-list">
-        <li><span class="doc-name">Employee handbook</span><span class="doc-desc">Working hours and remote work, expenses, annual leave, sick pay, company equipment, notice periods</span></li>
-        <li><span class="doc-name">Client agreement</span><span class="doc-desc">Payment terms, order cutoffs, damaged goods and returns, service levels, liability, termination</span></li>
-        <li><span class="doc-name">Warehouse manual</span><span class="doc-desc">Goods receiving, put-away, picking and dispatch, damage handling, returns processing, stock counts</span></li>
-        <li><span class="doc-name">IT security policy</span><span class="doc-desc">Accounts and MFA, devices, data retention under GDPR, invoice fraud, vendor access, incident response</span></li>
-        <li><span class="doc-name">Supplier procedure</span><span class="doc-desc">Qualification, the 90-day trial, payment terms, labelling, shelf life on arrival, delisting</span></li>
+        <li><span class="doc-name">Personalhandbok</span><span class="doc-desc">Arbetstid och distansarbete, utlägg, semester, sjuklön, utrustning, uppsägningstid</span></li>
+        <li><span class="doc-name">Kundavtal</span><span class="doc-desc">Betalningsvillkor, orderstopp, skadat gods och returer, servicenivåer, ansvar, uppsägning</span></li>
+        <li><span class="doc-name">Lagerrutiner</span><span class="doc-desc">Godsmottagning, inläggning, plock och utlastning, skadat gods, returhantering, inventering</span></li>
+        <li><span class="doc-name">IT-säkerhetspolicy</span><span class="doc-desc">Konton och tvåfaktor, utrustning, gallring enligt GDPR, fakturabedrägeri, extern åtkomst, incidenter</span></li>
+        <li><span class="doc-name">Leverantörsrutin</span><span class="doc-desc">Kvalificering, provperiod på 90 dagar, betalningsvillkor, märkning, hållbarhet vid ankomst, avlistning</span></li>
       </ul>
 
-      <p class="label">Try asking</p>
+      <p class="label">Testa att fråga</p>
       <div class="suggestions" id="suggestions">
-        <button type="button" class="chip">A customer says goods arrived damaged. They told us 10 days later. What are they entitled to?</button>
-        <button type="button" class="chip">My work laptop was stolen over the weekend. What am I supposed to do?</button>
-        <button type="button" class="chip">A supplier wants to change their packaging. What do we need from them, and when?</button>
-        <button type="button" class="chip">I want to book three weeks off in July. When do I need to ask by?</button>
+        <button type="button" class="chip">En kund säger att godset kom fram skadat. De hörde av sig efter 10 dagar. Vad har de rätt till?</button>
+        <button type="button" class="chip">Min jobbdator blev stulen i helgen. Vad ska jag göra?</button>
+        <button type="button" class="chip">En leverantör vill byta förpackning. Vad behöver vi från dem, och när?</button>
+        <button type="button" class="chip">Jag vill ta tre veckors semester i juli. När senast måste jag ansöka?</button>
       </div>
     </section>
 
@@ -147,9 +144,9 @@
 
     <form id="form">
       <div class="field">
-        <input id="question" type="text" placeholder="Ask a question about the documents" autocomplete="off" autofocus>
+        <input id="question" type="text" placeholder="Ställ en fråga om dokumenten" autocomplete="off" autofocus>
       </div>
-      <button type="submit" id="submit" class="btn btn-solid">Ask</button>
+      <button type="submit" id="submit" class="btn btn-solid">Fråga</button>
     </form>
   </main>
 
@@ -165,7 +162,7 @@
   // Plain-text history sent back to the server each turn: [{role, content}, ...]
   let history = [];
 
-  const LABELS = { user: "You", assistant: "Answer", pending: "Thinking", error: "Error" };
+  const LABELS = { user: "Du", assistant: "Svar", pending: "Tänker", error: "Fel" };
 
   function addMessage(role, text) {
     const div = document.createElement("div");
@@ -200,7 +197,7 @@
     suggestions.hidden = true;
     input.disabled = true;
     submitBtn.disabled = true;
-    const pending = addMessage("pending", "Reading the documents…");
+    const pending = addMessage("pending", "Läser dokumenten…");
 
     try {
       const res = await fetch("/api/ask", {
@@ -212,7 +209,7 @@
       pending.remove();
 
       if (!res.ok) {
-        addMessage("error", data.error || "Something went wrong.");
+        addMessage("error", data.error || "Något gick fel.");
       } else {
         addMessage("assistant", data.answer);
         history.push({ role: "user", content: question });
@@ -220,7 +217,7 @@
       }
     } catch (err) {
       pending.remove();
-      addMessage("error", "Could not reach the server: " + err.message);
+      addMessage("error", "Kunde inte nå servern: " + err.message);
     } finally {
       input.disabled = false;
       submitBtn.disabled = false;

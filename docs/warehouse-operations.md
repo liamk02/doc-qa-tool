@@ -1,45 +1,45 @@
-# Nordvik Trading AB - Warehouse Operations Manual
-Site: Jordbro DC. Revision 11, February 2026.
+# Nordvik Trading AB - Lagerrutiner
+Anläggning: Jordbro DC. Revision 11, februari 2026.
 
-## 1. Goods Receiving
-Inbound deliveries are booked into slots via the supplier portal. Unbooked deliveries are accepted only if a dock is free, and drivers may be turned away during the 06:00 to 08:00 outbound window.
+## 1. Godsmottagning
+Inkommande leveranser bokas in via leverantörsportalen. Obokade leveranser tas emot endast om en port är ledig, och chaufförer kan avvisas under utlastningsfönstret 06:00 till 08:00.
 
-On arrival the receiving operator checks the pallet count against the delivery note before signing anything. Any discrepancy is written on the driver's copy at that moment. Signing a clean proof of delivery for a short load transfers the loss to Nordvik, and the carrier will reject a claim raised afterwards.
+Vid ankomst räknar mottagaren antalet pallar mot följesedeln innan något skrivs under. Eventuell avvikelse skrivs på chaufförens exemplar direkt på plats. Att kvittera en ren fraktsedel för en underleverans flyttar förlusten till Nordvik, och transportören avvisar krav som kommer i efterhand.
 
-Chilled goods are temperature-probed on arrival. Anything received above 6 degrees Celsius is quarantined, not put away, and escalated to the duty supervisor immediately.
+Kylvaror temperaturmäts vid ankomst. Allt som tas emot över 6 grader ställs i karantän, läggs inte in på lagerplats, och eskaleras omedelbart till ansvarig arbetsledare.
 
-## 2. Put-Away and Stock Locations
-Goods are put away within four hours of receipt. Fast-moving lines occupy the ground-level pick face in aisles A to D. Slow-moving and bulk stock is racked above in reserve locations.
+## 2. Inläggning och lagerplatser
+Gods läggs in inom fyra timmar från mottagandet. Högfrekventa artiklar ligger i plockfronten i marknivå i gång A till D. Lågfrekventa varor och buffertlager ställs på pall ovanför.
 
-Every movement is scanned. Stock moved without a scan is the single most common cause of pick errors, because the system continues to direct pickers to an empty location.
+Varje flytt skannas. Varor som flyttas utan skanning är den enskilt vanligaste orsaken till plockfel, eftersom systemet fortsätter skicka plockare till en plats som redan är tom.
 
-## 3. Order Picking and Dispatch
-The pick list generates automatically at the 14:00 cutoff. Orders placed after the cutoff roll to the next business day and are not picked early even when the warehouse is quiet, because stock allocation runs at cutoff.
+## 3. Orderplock och utlastning
+Plocklistan genereras automatiskt vid orderstoppet klockan 14:00. Order som läggs efter stoppet flyttas till nästa arbetsdag och plockas inte i förtid även när lagret är lugnt, eftersom lagersaldot allokeras vid stoppet.
 
-Pickers scan each line as it is picked. A short pick is flagged in the handheld rather than left blank, which triggers a substitution check by customer service before the order leaves.
+Plockare skannar varje rad som plockas. En underplock flaggas i handdatorn i stället för att lämnas tom, vilket gör att kundtjänst kontrollerar ersättningsvara innan ordern lämnar lagret.
 
-Every outbound pallet is photographed after wrapping and before loading. These photographs are retained for 90 days and are the primary evidence when a client claims transit damage.
+Varje utgående pall fotograferas efter plastning och före lastning. Bilderna sparas i 90 dagar och är det främsta beviset när en kund hävdar transportskada.
 
-## 4. Damaged Goods
-Damage found in the warehouse is logged against the responsible stage: inbound, storage, pick, or load. Damaged stock is moved to the quarantine bay in aisle Z and written off weekly by the site manager.
+## 4. Skadat gods
+Skador som upptäcks på lagret loggas mot det steg där de uppstått: inleverans, lagring, plock eller lastning. Skadat gods flyttas till karantänytan i gång Z och skrivs av varje vecka av platschefen.
 
-Where damage is discovered during picking, the picker does not substitute silently. The line is flagged short and customer service contacts the client.
+Om skada upptäcks under plock byter plockaren inte vara på eget bevåg. Raden flaggas som underplock och kundtjänst kontaktar kunden.
 
-## 5. Returns Processing
-Returns arrive with a Return Authorisation number. Anything arriving without one is refused at the door and sent back with the carrier at the sender's cost.
+## 5. Returhantering
+Returer kommer med ett returnummer. Gods som kommer utan returnummer nekas vid porten och skickas tillbaka med transportören på avsändarens bekostnad.
 
-Authorised returns are inspected within two business days. The inspector records condition against four categories: resalable, repackable, damaged, and expired. Resalable stock returns to the pick face. Repackable stock goes to the rework bench. Damaged and expired stock is written off.
+Godkända returer inspekteras inom två arbetsdagar. Inspektören klassar skicket i fyra kategorier: säljbart, ompackningsbart, skadat och utgånget. Säljbart gods går tillbaka till plockfronten. Ompackningsbart går till ompackning. Skadat och utgånget skrivs av.
 
-Credit notes are raised only after inspection, never on receipt of the return. This is deliberate: crediting on arrival has historically produced credits for goods that turned out to be unsalable.
+Kreditnota utfärdas först efter inspektion, aldrig när returen tas emot. Det är medvetet: att kreditera vid ankomst har historiskt gett krediteringar för varor som visade sig vara osäljbara.
 
-Chilled returns are never restocked, regardless of apparent condition, because the cold chain cannot be verified once goods have left the site.
+Kylvaror läggs aldrig tillbaka i lager, oavsett hur de ser ut, eftersom kylkedjan inte går att verifiera när godset har lämnat anläggningen.
 
-## 6. Stock Counts
-A full physical count runs twice yearly, in weeks 4 and 34. Perpetual cycle counts cover the A-movers weekly and everything else quarterly.
+## 6. Inventering
+Fullständig fysisk inventering görs två gånger per år, vecka 4 och vecka 34. Löpande cykelinventering täcker högfrekventa artiklar varje vecka och övriga varje kvartal.
 
-Discrepancies above 2 percent by line value are investigated before the count is posted. The warehouse does not adjust the system to match the shelf without an investigation note, as this hides recurring process faults.
+Avvikelser över 2 procent av radvärdet utreds innan inventeringen bokförs. Lagret justerar aldrig systemet mot hyllan utan en utredningsnotering, eftersom det döljer återkommande processfel.
 
-## 7. Health and Safety
-High-visibility vests are mandatory beyond the pedestrian line. Forklift operation requires a current licence held on file with the site manager.
+## 7. Arbetsmiljö
+Varselväst är obligatorisk bortom gånglinjen. Truckkörning kräver giltigt förarbevis som finns arkiverat hos platschefen.
 
-Any incident, including near misses, is reported the same shift. Near misses matter: the site's two lost-time injuries in the last five years were both preceded by unreported near misses at the same location.
+Varje händelse, inklusive tillbud, rapporteras samma skift. Tillbud spelar roll: anläggningens två olyckor med frånvaro de senaste fem åren föregicks båda av orapporterade tillbud på samma plats.
